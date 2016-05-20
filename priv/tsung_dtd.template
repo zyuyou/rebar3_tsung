@@ -1,0 +1,12 @@
+{description, "Tsung dtd file - `tsung-1.0.dtd`, p.s. Don't call `rebar3 new tsung_dtd` directly."}.
+
+{variables, [
+    {session_types, "", "list of new tsung plugin session type"},
+    {request_types, "", "list of new tsung plugin request type"},
+    {request_types_define, "", "new tsung plugin's requset type define"},
+    {output, "tsung", "output dir"}
+]}.
+
+{dir, "{{output}}"}.
+
+{template, "tsung-1.0.dtd", "{{output}}/tsung-1.0.dtd"}.
