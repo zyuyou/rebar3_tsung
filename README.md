@@ -34,6 +34,7 @@ Add `tsung config` to rebar.config.
 %%    {config, "tsung.xml"},    % default is {{root}}/tsung.xml
 %%    {dtd, "tsung-1.0.dtd"},   % default is {{root}}/tsung-1.0.dtd
 %%    {log_dir, "log"}          % default is {{root}}/log
+%%    {timeout, 300000}         % default is 300000
 
     {plugins, [
         % {PluginName :: atom(), Attrs :: list(Attr()), IsEmpty:: bool()}

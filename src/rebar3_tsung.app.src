@@ -1,15 +1,13 @@
 {application, rebar3_tsung,
- [{description, "A rebar plugin for helping develop Tsung plugin"},
-  {vsn, "0.1.0"},
-  {registered, []},
-  {applications,
-   [kernel,
-    stdlib
-   ]},
-  {env,[]},
-  {modules, []},
+    [{description, "A rebar plugin for helping develop Tsung plugin"},
+        {vsn, "0.1.0"},
+        {registered, []},
+        {applications,
+            [kernel,stdlib]},
+        {env, []},
+        {modules, []},
 
-  {maintainers, ["Yuyou Chow"]},
-  {licenses, ["MIT"]},
-  {links, [{"Github", "https://github.com/zyuyou/rebar3_tsung"}]}
- ]}.
+        {maintainers, ["Yuyou Chow"]},
+        {licenses, ["MIT"]},
+        {links, [{"Github", "https://github.com/zyuyou/rebar3_tsung"}]}
+    ]}.

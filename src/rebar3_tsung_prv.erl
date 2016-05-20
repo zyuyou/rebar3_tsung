@@ -13,6 +13,8 @@
 ).
 -define(TSUNG_DTD_ELEMENT_ATTR_STRUCTURE, "~n   ~s ~s ~s").
 
+-define(RUN_TSUNG_TIMEOUT, 300000).
+
 -record(tsung_args, {
     root = "tsung",
 
@@ -99,8 +101,15 @@ do(State) ->
                     {ok, State}
             end;
         [] ->
-            TsungArgs = #tsung_args{} = tsung_args(State),
-            case run_tsung(TsungArgs) of
+%%            TsungArgs = #tsung_args{} = tsung_args(State),
+            [TsungPluginApp | _] = rebar_state:project_apps(State),
+            PluginPA = rebar_app_info:ebin_dir(TsungPluginApp),
+            TsungArgs = tsung_args(TsungConfig, #tsung_args{plugin_pa = PluginPA}),
+
+            Timeout = proplists:get_value(timeout, TsungConfig, ?RUN_TSUNG_TIMEOUT),
+
+            Command = parse_command(TsungArgs),
+            case run_tsung(Command, Timeout) of
                 {ok, _} ->
                     {ok, State};
                 Error ->
@@ -116,11 +125,11 @@ strip_flags([]) -> [];
 strip_flags(["-"++_|Opts]) -> strip_flags(Opts);
 strip_flags([Opt | Opts]) -> [Opt | strip_flags(Opts)].
 
-tsung_args(State) ->
-    TsungConfig = rebar_state:get(State, tsung),
-    [TsungPluginApp | _] = rebar_state:project_apps(State),
-    PluginPA = rebar_app_info:ebin_dir(TsungPluginApp),
-    tsung_args(TsungConfig, #tsung_args{plugin_pa = PluginPA}).
+%%tsung_args(State) ->
+%%    TsungConfig = rebar_state:get(State, tsung),
+%%    [TsungPluginApp | _] = rebar_state:project_apps(State),
+%%    PluginPA = rebar_app_info:ebin_dir(TsungPluginApp),
+%%    tsung_args(TsungConfig, #tsung_args{plugin_pa = PluginPA}).
 
 tsung_args([], #tsung_args{} = Args) ->
     Args;
@@ -137,10 +146,9 @@ tsung_args([{extra_pa, ExtraPA} | Rest], #tsung_args{extra_pa = OldExtraPA} = Ar
 tsung_args([_H | Rest], #tsung_args{} = Args) ->
     tsung_args(Rest, Args).
 
-run_tsung(#tsung_args{} = Args) ->
-    Command = parse_command(Args),
-%%    io:format("~p~n", [Command]),
-    run_tsung(Command, 15000).
+%%run_tsung(#tsung_args{} = Args) ->
+%%    Command = parse_command(Args),
+%%    run_tsung(Command, 15000).
 
 parse_command(#tsung_args{root = Root} = Args) ->
     ParamsTsung = [?TSUNG_COMMAND],
