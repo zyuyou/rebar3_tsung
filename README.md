@@ -64,7 +64,7 @@ Add `tsung config` to rebar.config.
 ```
 <!ELEMENT change_type EMPTY>
 <!ATTLIST change_type
-     new_type         (ts_jabber | ts_http | ts_raw | ts_pgsql | ts_ldap | ts_webdav | ts_mysql | ts_fs | ts_shell | ts_job | ts_websocket | ts_amqp | ts_mqtt | **ts_sango**) #REQUIRED
+     new_type         (ts_jabber | ts_http | ts_raw | ts_pgsql | ts_ldap | ts_webdav | ts_mysql | ts_fs | ts_shell | ts_job | ts_websocket | ts_amqp | ts_mqtt | **ts_foo**) #REQUIRED
      host NMTOKEN #REQUIRED
      port NMTOKEN #REQUIRED
      server_type NMTOKEN #REQUIRED
