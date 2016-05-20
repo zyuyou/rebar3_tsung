@@ -25,7 +25,7 @@ Then just call your plugin directly in an existing application:
     ===> Compiling rebar3_tsung
     <Plugin Output>
 
-Exmaple
+Example
 ---
 Add `tsung config` to rebar.config.
 ```
