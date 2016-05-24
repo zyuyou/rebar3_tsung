@@ -1,6 +1,6 @@
 {application,rebar3_tsung,
              [{description,"A rebar plugin for helping develop Tsung plugin"},
-              {vsn,"0.1.1"},
+              {vsn,"0.1.2"},
               {registered,[]},
               {applications,[kernel,stdlib]},
               {env,[]},
