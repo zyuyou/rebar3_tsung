@@ -3,7 +3,7 @@
 -export([init/1, do/1, format_error/1]).
 
 -define(PROVIDER, tsung).
--define(DEPS, [app_discovery]).
+-define(DEPS, [app_discovery, lock]).
 
 -define(TSUNG_COMMAND, "tsung").
 -define(TSUNG_DTD_ELEMENT_STRUCTURE,
@@ -76,6 +76,7 @@ do(State) ->
             {ok, State};
         ["new"] ->
             io:format("new ~n", []),
+            io:format("new ~p~n", [rebar_state:all_deps(State)]),
             {ok, State};
         ["new", "dtd"] ->
             case lists:keyfind(plugins, 1, TsungConfig) of
@@ -101,10 +102,8 @@ do(State) ->
                     {ok, State}
             end;
         [] ->
-%%            TsungArgs = #tsung_args{} = tsung_args(State),
-            [TsungPluginApp | _] = rebar_state:project_apps(State),
-            PluginPA = rebar_app_info:ebin_dir(TsungPluginApp),
-            TsungArgs = tsung_args(TsungConfig, #tsung_args{plugin_pa = PluginPA}),
+            %% tsung plugin project apps ebin path
+            TsungArgs = tsung_args(TsungConfig, #tsung_args{plugin_pa = plugin_project_pas(State)}),
 
             Timeout = proplists:get_value(timeout, TsungConfig, ?RUN_TSUNG_TIMEOUT),
 
@@ -121,15 +120,20 @@ do(State) ->
 format_error(Reason) ->
     io_lib:format("~p", [Reason]).
 
+plugin_project_pas(State) ->
+    lists:foldl(
+        fun(AppInfo, Acc) ->
+            case rebar_app_info:name(AppInfo) of
+                <<"tsung_plugin_helper">> ->
+                    Acc;
+                _AppName ->
+                    [rebar_app_info:ebin_dir(AppInfo) | Acc]
+            end
+        end, [], rebar_state:project_apps(State) ++ rebar_state:all_deps(State)).
+
 strip_flags([]) -> [];
 strip_flags(["-"++_|Opts]) -> strip_flags(Opts);
 strip_flags([Opt | Opts]) -> [Opt | strip_flags(Opts)].
-
-%%tsung_args(State) ->
-%%    TsungConfig = rebar_state:get(State, tsung),
-%%    [TsungPluginApp | _] = rebar_state:project_apps(State),
-%%    PluginPA = rebar_app_info:ebin_dir(TsungPluginApp),
-%%    tsung_args(TsungConfig, #tsung_args{plugin_pa = PluginPA}).
 
 tsung_args([], #tsung_args{} = Args) ->
     Args;
@@ -145,10 +149,6 @@ tsung_args([{extra_pa, ExtraPA} | Rest], #tsung_args{extra_pa = OldExtraPA} = Ar
     tsung_args(Rest, Args#tsung_args{extra_pa = ExtraPA ++ OldExtraPA});
 tsung_args([_H | Rest], #tsung_args{} = Args) ->
     tsung_args(Rest, Args).
-
-%%run_tsung(#tsung_args{} = Args) ->
-%%    Command = parse_command(Args),
-%%    run_tsung(Command, 15000).
 
 parse_command(#tsung_args{root = Root} = Args) ->
     ParamsTsung = [?TSUNG_COMMAND],
@@ -169,11 +169,16 @@ parse_command(#tsung_args{root = Root} = Args) ->
                 [LogDir, "-l" | ParamsConfig]
         end,
 
-    ParamsPluginEbinPath = ["start", Args#tsung_args.plugin_pa, "-X" | ParamsLog],
+    ParamsPluginPa =
+        lists:foldl(
+            fun(Path, Acc) ->
+                [Path, "-X" | Acc]
+            end, ParamsLog, Args#tsung_args.plugin_pa ++ Args#tsung_args.extra_pa),
 
-    string:join(lists:reverse(ParamsPluginEbinPath), " ").
+    string:join(lists:reverse(["start" | ParamsPluginPa]), " ").
 
 run_tsung(Command, Timeout) ->
+%%    io:format("Tsung run command:~p~n", [Command]),
     Port = erlang:open_port({spawn, Command}, [exit_status]),
     tsung_loop(Port, [], Timeout).
 
