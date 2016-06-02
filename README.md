@@ -1,6 +1,8 @@
 rebar3_tsung
 =====
 
+[![Join the chat at https://gitter.im/zyuyou/rebar3_tsung](https://badges.gitter.im/zyuyou/rebar3_tsung.svg)](https://gitter.im/zyuyou/rebar3_tsung?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 A rebar plugin for helping develop Tsung plugin
 
 Build
