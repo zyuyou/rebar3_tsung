@@ -48,9 +48,9 @@ Add `tsung config` to rebar.config.
 ]}.
 ```
 
-> Call `rebar3 tsung` will run `tsung ...args start` which has flag like `-X _build/default/lib/{{tsung_plugin_lib}}/ebin`.
+> 1. Call `rebar3 tsung new dtd` will generate an dtd-file from `plugins` config, some code would like below:
 
-> Call `rebar3 tsung new dtd` will generate an dtd-file from `plugins` config, some code would like below:
+> 2. Call `rebar3 tsung` will run `tsung ...args start` which has flag like `-X _build/default/lib/{{tsung_plugin_lib}}/ebin`.
 
 ```
 <!ATTLIST session
