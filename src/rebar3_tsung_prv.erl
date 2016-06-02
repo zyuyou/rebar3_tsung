@@ -68,7 +68,7 @@ do(State) ->
         {root, "tsung"}
     ]),
 
-    {root, Root} = proplists:get_value(root, TsungConfig, {root, "tsung"}),
+    Root = proplists:get_value(root, TsungConfig, "tsung"),
 
     case strip_flags(rebar_state:command_args(State)) of
         ["help"] ->
