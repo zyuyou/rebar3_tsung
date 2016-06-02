@@ -68,7 +68,7 @@ do(State) ->
         {root, "tsung"}
     ]),
 
-    {root, Root} = lists:keyfind(root, 1, TsungConfig),
+    {root, Root} = proplists:get_value(root, TsungConfig, {root, "tsung"}),
 
     case strip_flags(rebar_state:command_args(State)) of
         ["help"] ->
